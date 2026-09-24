@@ -24,12 +24,13 @@ if(count($jobs))
  include_once(__DIR__.'/class/pcdbClass.php');
  include_once(__DIR__.'/class/qdbClass.php');
  include_once(__DIR__.'/class/logsClass.php');
+ include_once(__DIR__.'/class/assetClass.php');
  include_once(__DIR__.'/class/ACES4_1GeneratorClass.php');
 
  $vcdb=new vcdb();
  $pcdb=new pcdb();
  $qdb=new qdb();
-
+ $asset=new asset();
  $logs=new logs();
  $generator=new ACESgenerator();
 
@@ -66,8 +67,12 @@ if(count($jobs))
  $partcategories=$pim->getReceiverprofilePartcategories($receiverprofileid);
  $apps=$pim->getAppsByPartcategories($partcategories,$lifecyclestatuslist);
  $parttranslations=$pim->getReceiverprofileParttranslations($receiverprofileid);
- 
+ $profileassettagstemp=$pim->getAssettagsForReceiverprofile($receiverprofileid); //$assettags[]=array('id'=>$row['id'],'assettagid'=>$row['assettagid'],'tagtext'=>$row['tagtext']); 
+ $profileassettags=[]; foreach($profileassettagstemp as $profileassettag){$profileassettags[]=$profileassettag['tagtext'];}
+  
  $pim->logBackgroundjobEvent($jobid, 'Partcategories in export:'.implode(',',$partcategories));
+ $pim->logBackgroundjobEvent($jobid, 'Asset tags wanted by profile:'.implode(',',$profileassettags));
+ 
  
  $filename=$jobs[0]['outputfile'];
  $profileelements=explode(';',$profiledata);
@@ -115,11 +120,53 @@ if(count($jobs))
       break; // use first instance found
      }
     }
-   }
+   }   
   }
  }
 
+ // Exrtact a distinct list of assets
+ $citedassets=array();
+ foreach($apps as $app)
+ {
+  if($app['assetname']!='' && !in_array($app['assetname'], $citedassets))
+  {
+   $citedassets[]=$app['assetname'];
+  }
+ }
+ //$pim->logBackgroundjobEvent($jobid, 'Assets in export:'.implode(',',$citedassets));
  
+// filter assets down to list of those wanted by this reciver
+ $wantedassets=[];
+ foreach($citedassets as $citedasset)
+ {
+  $citedassetstags=$asset->getAssettagsForAsset($citedasset); //$tags[]=array('id'=>$row['id'],'assettagid'=>$row['assettagid'],'tagtext'=>$row['tagtext']);
+  foreach ($citedassetstags as $citedassetstag)
+  {
+   if(in_array($citedassetstag['tagtext'],$profileassettags))
+   {
+    $wantedassets[]=$citedasset; break;       
+   }
+  }
+ }
+ 
+ //$pim->logBackgroundjobEvent($jobid, 'Assets wanted by receiver:'.implode(',',$wantedassets));
+  
+ if(count($citedassets))
+ {
+  $appstemp=[];
+  foreach($apps as $app)
+  {
+   if(!in_array($app['assetname'],$wantedassets))
+   {
+    $app['assetname']='';
+    $app['assetitemorder']=0;
+   }
+   $appstemp[]=$app;
+  }
+  $apps=$appstemp;
+ }
+
+
  // record the export for future nets a posterity
  $appidkeyedoids=array();
  $exportid=$pim->logExport($receiverprofileid, 'ACES-xml', $filename, count($apps).' apps '.$exportpurpose);

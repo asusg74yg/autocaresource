@@ -133,7 +133,7 @@ foreach($partnumbers as $partnumber)
     
     
     $item['PartTerminologyID']=$part['parttypeid'];
-    $item['BrandAAIAID']=$part['brandid'];
+    $item['BrandID']=$part['brandid'];
 
 //'MinimumOrderQuantity'
 //'MinimumOrderQuantityUOM'
@@ -237,7 +237,8 @@ foreach($partnumbers as $partnumber)
    $itempackage['InnerQuantityUOM']=$package['innerquantityuom'];
    $itempackage['Weight']=$package['weight'];
    $itempackage['WeightsUOM']=$package['weightsuom'];
-   $itempackage['PackageLevelGTIN']=$package['packagelevelGTIN'];
+   $itempackage['PackageLevelGTIN']='';
+   if(strlen($package['packagelevelGTIN'])==12){$itempackage['PackageLevelGTIN']='00'.$package['packagelevelGTIN'];}   
    $itempackage['PackageBarCodeCharacters']=$package['packagebarcodecharacters'];
    $itempackage['ShippingHeight']=$package['shippingheight'];
    $itempackage['ShippingWidth']=$package['shippingwidth'];
@@ -254,24 +255,15 @@ foreach($partnumbers as $partnumber)
     
  //--------------------- kits -------------------------------    
  
- //--------------------- interchanges -------------------------------    
-
-  $interchanges=$interchange->getInterchangeByPartnumber($partnumber);
-  //    $records[]=array('id'=>$row['id'],'partnumber'=>$row['partnumber'],
-  //    'competitorpartnumber'=>$row['competitorpartnumber'],
-  //    'brandAAIAID'=>$row['brandAAIAID'],
-  //    'interchangequantity'=>$row['interchangequantity'],
-  //    'uom'=>$row['uom'],
-  //    'interchangenotes'=>base64_decode($row['interchangenotes']),
-  //    'internalnotes'=>base64_decode($row['internalnotes']));
-
+ //--------------------- interchanges -------------------------------
   
+  $interchanges=$interchange->getInterchangeByPartnumber($partnumber);
   foreach($interchanges as $interchangerecord)
   {
    $iteminterchange=array();
    $iteminterchange['CompetitorPartNumber']=$interchangerecord['competitorpartnumber'];
-   $iteminterchange['BrandAAIAID']=$interchangerecord['brandAAIAID'];
-   $iteminterchange['SubBrandAAIAID']=$interchangerecord['subbrandAAIAID'];
+   $iteminterchange['BrandID']=$interchangerecord['brandAAIAID'];
+   $iteminterchange['SubBrandID']=$interchangerecord['subbrandAAIAID'];
    $iteminterchange['InterchangeQuantity']=$interchangerecord['interchangequantity'];
    $iteminterchange['UOM']=$interchangerecord['uom'];
    $iteminterchange['InterchangeNotes']=$interchangerecord['interchangenotes'];

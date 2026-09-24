@@ -406,12 +406,9 @@ class PIESgenerator
     }
     $ItemElement->appendChild($KitsElement);
    }
-   
-   
-   
-   
+
    //----------------------- interchanges ----------------------------
- 
+
    if(isset($item['interchanges']) && count($item['interchanges']))
    {
     $PartInterchangeInfoElement=$doc->createElement('PartInterchangeInfo');
@@ -421,16 +418,13 @@ class PIESgenerator
      $PartInterchangeElement->setAttribute('MaintenanceType','A');
      $PartInterchangeElement->setAttribute('BrandID',$interchange['BrandID']);
 
-     //if(array_key_exists('BrandLabel',$interchange)){$PartInterchangeElement->setAttribute('BrandLabel',$interchange['BrandLabel']);}
      if(array_key_exists('SubBrandID',$interchange) && $interchange['SubBrandID']!=''){$PartInterchangeElement->setAttribute('SubBrandID',$interchange['SubBrandID']);}
-     //if(array_key_exists('SubBrandLabel',$interchange)){$PartInterchangeElement->setAttribute('SubBrandLabel',$interchange['SubBrandLabel']);}
      if(array_key_exists('VMRSBrandID',$interchange)){$PartInterchangeElement->setAttribute('VMRSBrandID',$interchange['VMRSBrandID']);}
      if(array_key_exists('ItemEquivalentUOM',$interchange)){$PartInterchangeElement->setAttribute('ItemEquivalentUOM',$interchange['ItemEquivalentUOM']);}
      if(array_key_exists('QualityGradeLevel',$interchange)){$PartInterchangeElement->setAttribute('QualityGradeLevel',$interchange['QualityGradeLevel']);}
      if(array_key_exists('InternalNotes',$interchange)){$PartInterchangeElement->setAttribute('InternalNotes',$interchange['InternalNotes']);}
      if(array_key_exists('LanguageCode',$interchange)){$PartInterchangeElement->setAttribute('LanguageCode',$interchange['LanguageCode']);}
-     
-     
+          
      $InterchangePartNumberElement=$doc->createElement('PartNumber',$interchange['CompetitorPartNumber']);
      if(array_key_exists('ReferenceItem',$interchange)){$InterchangePartNumberElement->setAttribute('ReferenceItem', $interchange['ReferenceItem']);}
      if(array_key_exists('InterchangeQuantity',$interchange)){$InterchangePartNumberElement->setAttribute('InterchangeQuantity', $interchange['InterchangeQuantity']);}
@@ -438,13 +432,11 @@ class PIESgenerator
      if(array_key_exists('InterchangeNotes',$interchange) && trim($interchange['InterchangeNotes'])!=''){$InterchangePartNumberElement->setAttribute('InterchangeNotes', $interchange['InterchangeNotes']);}
      
      $PartInterchangeElement->appendChild($InterchangePartNumberElement);
-     $PartInterchangeInfoElement->appendChild($PartInterchangeElement);
-     
+     $PartInterchangeInfoElement->appendChild($PartInterchangeElement);     
     }  
     $ItemElement->appendChild($PartInterchangeInfoElement);
    }
-     
-   
+
    //----------------------- assets ----------------------------
  
    if(isset($item['assets']) && count($item['assets']))

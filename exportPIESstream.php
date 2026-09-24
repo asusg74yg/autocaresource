@@ -235,8 +235,8 @@ foreach($partnumbers as $partnumber)
    $itempackage['InnerQuantityUOM']=$package['innerquantityuom'];
    $itempackage['Weight']=$package['weight'];
    $itempackage['WeightsUOM']=$package['weightsuom'];
-   $itempackage['PackageLevelGTIN']=$package['packagelevelGTIN'];
-   if(strlen($itempackage['PackageLevelGTIN'])==12){$itempackage['PackageLevelGTIN']='00'.$itempackage['PackageLevelGTIN'];}   
+   $itempackage['PackageLevelGTIN']='';
+   if(strlen($package['packagelevelGTIN'])==12){$itempackage['PackageLevelGTIN']='00'.$package['packagelevelGTIN'];}
    $itempackage['PackageBarCodeCharacters']=$package['packagebarcodecharacters'];
    $itempackage['ShippingHeight']=$package['shippingheight'];
    $itempackage['ShippingWidth']=$package['shippingwidth'];
